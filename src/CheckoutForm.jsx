@@ -14,21 +14,28 @@ class CheckoutForm extends Component {
             <span className="badge badge-secondary badge-pill">3</span>
           </h4>
           <ul className="list-group mb-3">
-            {this.props.data.map((person, i) => (
-              <Product updateItem={this.updateItem} key={i} data={person} />
+            {this.props.data.map((item, i) => (
+              <Product key={i} item={item} />
             ))}
 
             <li className="list-group-item d-flex justify-content-between lh-condensed">
               Total:
               <span className="font-weight-bold">
-                {this.props.total.toFixed(2)} $
+                {this.props.total.toFixed(2)} ${" "}
               </span>
             </li>
           </ul>
 
-          <form className="card p-2">
+          <form
+            className="card p-2"
+            data={this.props.form.coupon}
+            onChange={this.props.onChange}
+            id="form-coupon"
+          >
             <div className="input-group">
               <input
+                id="coupon"
+                defaultValue={this.props.form.coupon}
                 type="text"
                 className="form-control"
                 placeholder="Promo code"
@@ -41,7 +48,6 @@ class CheckoutForm extends Component {
             </div>
           </form>
         </div>
-
         {/* Form needs data on load and the change handler */}
         <Form />
       </div>
@@ -55,7 +61,11 @@ const mapStateToProps = state => ({
   form: state.form
 });
 
+const mapDispatchToProps = dispatch => ({
+  onChange: e => dispatch({ type: "GETVALUES", input: e.target })
+});
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(CheckoutForm);

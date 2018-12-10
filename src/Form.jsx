@@ -10,15 +10,20 @@ class Form extends Component {
     return (
       <div className="col-md-8 order-md-1">
         <h4 className="mb-3">Billing address</h4>
-        <form className="needs-validation" noValidate="">
+        <form
+          className="needs-validation"
+          noValidate=""
+          data={this.props.form}
+          onChange={this.props.onChange}
+        >
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="firstName">First name</label>
               <input
                 type="text"
-                onChange={this.props.onChange}
                 className="form-control"
                 id="firstName"
+                defaultValue={this.props.form.firstName}
                 placeholder=""
                 required=""
               />
@@ -30,7 +35,7 @@ class Form extends Component {
               <label htmlFor="lastName">Last name</label>
               <input
                 type="text"
-                onChange={this.props.onChange}
+                defaultValue={this.props.form.lastName}
                 className="form-control"
                 id="lastName"
                 placeholder=""
@@ -51,7 +56,7 @@ class Form extends Component {
               <input
                 type="text"
                 className="form-control"
-                onChange={this.props.onChange}
+                defaultValue={this.props.form.userName}
                 id="userName"
                 placeholder="Username"
                 required=""
@@ -69,7 +74,7 @@ class Form extends Component {
             <input
               type="email"
               className="form-control"
-              onChange={this.props.onChange}
+              defaultValue={this.props.form.email}
               id="email"
               placeholder="you@example.com"
             />
@@ -83,7 +88,7 @@ class Form extends Component {
             <input
               type="text"
               className="form-control"
-              onChange={this.props.onChange}
+              defaultValue={this.props.form.address}
               id="address"
               placeholder="1234 Main St"
               required=""
@@ -100,7 +105,7 @@ class Form extends Component {
             <input
               type="text"
               className="form-control"
-              onChange={this.props.onChange}
+              defaultValue={this.props.form.address2}
               id="address2"
               placeholder="Apartment or suite"
             />
@@ -111,7 +116,7 @@ class Form extends Component {
               <label htmlFor="country">Country</label>
               <select
                 className="custom-select d-block w-100"
-                onChange={this.props.onChange}
+                defaultValue={this.props.form.country}
                 id="country"
                 required=""
               >
@@ -126,7 +131,7 @@ class Form extends Component {
               <label htmlFor="state">State</label>
               <select
                 className="custom-select d-block w-100"
-                onChange={this.props.onChange}
+                defaultValue={this.props.form.state}
                 id="state"
                 required=""
               >
@@ -142,7 +147,7 @@ class Form extends Component {
               <input
                 type="text"
                 className="form-control"
-                onChange={this.props.onChange}
+                defaultValue={this.props.form.zip}
                 id="zip"
                 placeholder=""
                 required=""
@@ -156,6 +161,7 @@ class Form extends Component {
               type="checkbox"
               className="custom-control-input"
               id="same-address"
+              defaultChecked={this.props.form["same-address"]}
             />
             <label className="custom-control-label" htmlFor="same-address">
               Shipping address is the same as my billing address
@@ -166,6 +172,7 @@ class Form extends Component {
               type="checkbox"
               className="custom-control-input"
               id="save-info"
+              defaultChecked={this.props.form["save-info"]}
             />
             <label className="custom-control-label" htmlFor="save-info">
               Save this information for next time
@@ -276,18 +283,11 @@ class Form extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  data: state.data,
-  total: state.total,
-  form: state.form
-});
-
 const mapDispatchToProps = dispatch => ({
-  onChange: event =>
+  onChange: e =>
     dispatch({
-      type: "ONCHANGE",
-      id: event.target.id,
-      value: event.target.value
+      type: "GETVALUES",
+      input: e.target
     })
 });
 
@@ -306,6 +306,6 @@ onChange = (field, value) => {
 */
 
 export default connect(
-  mapStateToProps,
+  state => ({ form: state.form }),
   mapDispatchToProps
 )(Form);

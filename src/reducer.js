@@ -30,53 +30,49 @@ const initialState = JSON.parse(localStorage.getItem("react-cart")) || {
     }
   ],
   total: 0,
-  // set initial form value
   form: {}
 };
 
-export default function(state = initialState, action) {
-  console.log("Action called in the reducer", action);
-  console.log("###", action);
-  switch (action.type) {
-    case "UPDATEITEM":
-      return {
-        ...state,
-        [action.id]: {
-          ...state[action.id],
-          amount: action.item.props.data.amount + 1
-        }
+export default (state = initialState, { type, input, index, item }) => {
+  switch (type) {
+    case "GETVALUES":
+      const value = input.type === "checkbox" ? input.checked : input.value;
+      console.log("GETVALUES", input.id, value);
+      const form = { ...state.form, [input.id]: value };
+      localStorage.setItem("react-cart", JSON.stringify({ ...state, form }));
+      return { ...state, form };
 
-        /*
-        data: {
-          //TODO find the item instead of create a new one
-          data: { [action.id]: action.item.props.data.amount + 1 }
-        }
-        */
-      };
-      localStorage.setItem("react-cart", JSON.stringify(this.state));
-    case "LIKE":
-      return {
-        ...state,
-        data: [
-          ...state.data,
-          {
-            [action.id]: action.value
-          }
-        ]
-      };
-      localStorage.setItem("react-cart", JSON.stringify(this.state));
-    case "ONCHANGE":
-      console.log(action);
-      return {
-        ...state,
-        //TODO: Why is it overwriting?
-        form: { [action.id]: action.value }
-      };
+    case "UPDATE":
+      console.log("UPDATE", index);
+      const data = [...state.data];
+
+      if (index === "like") {
+        data[item.id].liked = !data[item.id].liked;
+      } else if (index) {
+        data[item.id].amount++;
+      } else if (data[item.id].amount > 0) {
+        data[item.id].amount--;
+      }
+      data[item.id] = item;
+
+      const total = state.data
+        .map(item => item.price * item.amount)
+        .reduce((a, b) => a + b, 0);
+      localStorage.setItem(
+        "react-cart",
+        JSON.stringify({ ...state, total, data })
+      );
+      return { ...state, total, data };
+
+    case "DELETE":
+      console.log("Good Bye localStorage");
+      localStorage.removeItem("react-cart");
+      return;
 
     default:
       return state;
   }
-}
+};
 
 /*
 onChange = (field, value) => {
