@@ -54,8 +54,8 @@ class Product extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  updateItem: (item, index) =>
-    dispatch({ type: "UPDATE", item: item, index: index })
+  updateItem: (item, whatToDo) =>
+    dispatch({ type: "UPDATE", item: item, whatToDo: whatToDo })
 });
 
 export default connect(

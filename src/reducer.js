@@ -33,7 +33,7 @@ const initialState = JSON.parse(localStorage.getItem("react-cart")) || {
   form: {}
 };
 
-export default (state = initialState, { type, input, index, item }) => {
+export default (state = initialState, { type, input, whatToDo, item }) => {
   switch (type) {
     case "GETVALUES":
       const value = input.type === "checkbox" ? input.checked : input.value;
@@ -43,12 +43,12 @@ export default (state = initialState, { type, input, index, item }) => {
       return { ...state, form };
 
     case "UPDATE":
-      console.log("UPDATE", index);
+      console.log("UPDATE", whatToDo);
       const data = [...state.data];
 
-      if (index === "like") {
+      if (whatToDo === "like") {
         data[item.id].liked = !data[item.id].liked;
-      } else if (index) {
+      } else if (whatToDo) {
         data[item.id].amount++;
       } else if (data[item.id].amount > 0) {
         data[item.id].amount--;
@@ -87,17 +87,17 @@ onChange = (field, value) => {
 */
 
 /*
-updateItem = (item, index) => {
+updateItem = (item, whatToDo) => {
   var data = this.state.data;
 
-  if (index === "like") {
+  if (whatToDo === "like") {
     data[item.props.data.id].liked = !data[item.props.data.id].liked;
-  } else if (index) data[item.props.data.id].amount++;
+  } else if (whatToDo) data[item.props.data.id].amount++;
   else if (data[item.props.data.id].amount > 0)
     data[item.props.data.id].amount--;
 
   this.state.total = data
-    .map((item, index, array) => item.price * item.amount)
+    .map((item, whatToDo, array) => item.price * item.amount)
     .reduce((a, b) => a + b, 0);
   this.setState(this.state);
   localStorage.setItem("react-cart", JSON.stringify(this.state));
